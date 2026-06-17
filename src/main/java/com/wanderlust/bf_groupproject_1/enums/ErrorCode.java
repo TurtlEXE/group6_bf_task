@@ -1,0 +1,40 @@
+package com.wanderlust.bf_groupproject_1.enums;
+
+import lombok.Getter;
+
+@Getter
+public enum ErrorCode {
+    // Auth errors
+    AUTH_USERNAME_REQUIRED("AUTH_001"),
+    AUTH_USERNAME_EXISTS("AUTH_002"),
+    AUTH_USERNAME_INVALID("AUTH_003"),
+    AUTH_EMAIL_REQUIRED("AUTH_004"),
+    AUTH_EMAIL_INVALID("AUTH_005"),
+    AUTH_EMAIL_EXISTS("AUTH_006"),
+    AUTH_EMAIL_NOT_VERIFIED("AUTH_007"),
+    AUTH_PASSWORD_REQUIRED("AUTH_008"),
+    AUTH_PASSWORD_TOO_SHORT("AUTH_009"),
+    AUTH_PASSWORD_TOO_WEAK("AUTH_010"),
+    AUTH_PASSWORD_MISMATCH("AUTH_011"),
+    AUTH_INVALID_CREDENTIALS("AUTH_012"),
+    AUTH_ACCOUNT_DISABLED("AUTH_013"),
+    AUTH_TOKEN_EXPIRED("AUTH_014"),
+    AUTH_TOKEN_INVALID("AUTH_015"),
+
+    // Tour errors
+    TOUR_NOT_FOUND("TOUR_001"),
+    TOUR_TITLE_REQUIRED("TOUR_002"),
+    TOUR_PRICE_INVALID("TOUR_003"),
+    TOUR_DELETE_FAILED("TOUR_004"),
+
+    // General
+    VALIDATION_FAILED("GEN_001"),
+    INTERNAL_ERROR("GEN_002"),
+    ACCESS_DENIED("GEN_003");
+
+    private final String code;
+
+    ErrorCode(String code) {
+        this.code = code;
+    }
+}

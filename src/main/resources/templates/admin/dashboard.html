@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/navbar :: head('Admin Dashboard')}"></head>
+
+<body class="admin-body">
+
+  <div th:replace="~{fragments/admin-sidebar :: sidebar('dashboard')}"></div>
+
+  <main class="admin-main">
+    <!-- Top Bar -->
+    <div class="admin-topbar">
+      <div>
+        <h4 class="mb-0 fw-bold">Dashboard</h4>
+        <small class="text-muted">Welcome back, Admin</small>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <span class="text-muted small" sec:authentication="name">admin</span>
+        <div class="admin-avatar"><i class="bi bi-person-fill"></i></div>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-5">
+      <div class="col-md-4">
+        <div class="stat-card stat-card-primary">
+          <div class="stat-card-icon"><i class="bi bi-map"></i></div>
+          <div>
+            <p class="stat-card-label">Total Tours</p>
+            <h3 class="stat-card-value" th:text="${totalTours}">0</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card stat-card-success">
+          <div class="stat-card-icon"><i class="bi bi-check-circle"></i></div>
+          <div>
+            <p class="stat-card-label">Active Tours</p>
+            <h3 class="stat-card-value" th:text="${activeTours}">0</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card stat-card-info">
+          <div class="stat-card-icon"><i class="bi bi-people"></i></div>
+          <div>
+            <p class="stat-card-label">Registered Users</p>
+            <h3 class="stat-card-value" th:text="${totalUsers}">0</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+          <div class="card-body p-4">
+            <h5 class="fw-bold mb-3"><i class="bi bi-lightning-fill text-warning me-2"></i>Quick Actions</h5>
+            <div class="d-flex flex-column gap-2">
+              <a th:href="@{/admin/tours/new}" class="btn btn-primary rounded-pill px-4"><i
+                  class="bi bi-plus-lg me-2"></i>Create New Tour</a>
+              <a th:href="@{/admin/tours}" class="btn btn-outline-primary rounded-pill px-4"><i
+                  class="bi bi-list me-2"></i>Manage All Tours</a>
+              <a th:href="@{/}" target="_blank" class="btn btn-outline-secondary rounded-pill px-4"><i
+                  class="bi bi-globe me-2"></i>View Public Site</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+          <div class="card-body p-4">
+            <h5 class="fw-bold mb-3"><i class="bi bi-info-circle-fill text-primary me-2"></i>System Info</h5>
+            <table class="table table-borderless mb-0">
+              <tr>
+                <td class="text-muted">Platform</td>
+                <td class="fw-medium">Spring Boot 3.x</td>
+              </tr>
+              <tr>
+                <td class="text-muted">Database</td>
+                <td class="fw-medium">MySQL</td>
+              </tr>
+              <tr>
+                <td class="text-muted">Template Engine</td>
+                <td class="fw-medium">Thymeleaf</td>
+              </tr>
+              <tr>
+                <td class="text-muted">Security</td>
+                <td class="fw-medium">Spring Security</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/navbar :: scripts}"></div>
+</body>
+
+</html>

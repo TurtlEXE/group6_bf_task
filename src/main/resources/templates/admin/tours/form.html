@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/navbar :: head(${tourDTO.id == null ? 'Create Tour' : 'Edit Tour'})}"></head>
+
+<body class="admin-body">
+
+  <div th:replace="~{fragments/admin-sidebar :: sidebar('tours')}"></div>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div>
+        <h4 class="mb-0 fw-bold" th:text="${tourDTO.id == null ? 'Create New Tour' : 'Edit Tour'}">Manage Tour</h4>
+        <small class="text-muted"><a th:href="@{/admin/tours}" class="text-decoration-none">Tours</a> / Form</small>
+      </div>
+      <a th:href="@{/admin/tours}" class="btn btn-outline-secondary rounded-pill px-4"><i
+          class="bi bi-arrow-left me-2"></i>Back</a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+      <div class="card-body p-4 p-md-5">
+        <form th:action="${tourDTO.id == null ? '/admin/tours' : '/admin/tours/' + tourDTO.id}" method="post"
+          th:object="${tourDTO}">
+
+          <!-- Basic Info -->
+          <h5 class="fw-bold mb-4 pb-2 border-bottom"><i class="bi bi-info-circle me-2 text-primary"></i>Basic
+            Information</h5>
+          <div class="row g-4 mb-5">
+            <div class="col-md-8">
+              <label class="form-label fw-semibold">Tour Title <span class="text-danger">*</span></label>
+              <input type="text" th:field="*{title}" class="form-control" required
+                placeholder="e.g., Golden Triangle India">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Category <span class="text-danger">*</span></label>
+              <select th:field="*{category}" class="form-select" required>
+                <option value="" disabled>Select Category</option>
+                <option th:each="cat : ${T(com.wanderlust.bf_groupproject_1.enums.TourCategory).values()}"
+                  th:value="${cat}" th:text="${cat}"></option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Description</label>
+              <textarea th:field="*{description}" class="form-control" rows="4"
+                placeholder="Detailed description of the tour..."></textarea>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Location <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                <input type="text" th:field="*{location}" class="form-control" required
+                  placeholder="e.g., Paris, France">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Image URL <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-image"></i></span>
+                <input type="url" th:field="*{imageUrl}" class="form-control" required placeholder="https://...">
+              </div>
+            </div>
+          </div>
+
+          <!-- Pricing & Details -->
+          <h5 class="fw-bold mb-4 pb-2 border-bottom"><i class="bi bi-currency-dollar me-2 text-primary"></i>Pricing &
+            Details</h5>
+          <div class="row g-4 mb-5">
+            <div class="col-md-3">
+              <label class="form-label fw-semibold">Price ($) <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" th:field="*{price}" class="form-control" required min="0.01" step="0.01">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-semibold">Duration (Days)</label>
+              <div class="input-group">
+                <input type="number" th:field="*{durationDays}" class="form-control" min="1">
+                <span class="input-group-text">Days</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-semibold">Max Persons</label>
+              <input type="number" th:field="*{maxPersons}" class="form-control" min="1" placeholder="e.g., 20">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-semibold">Min Age</label>
+              <input type="number" th:field="*{minAge}" class="form-control" min="0" placeholder="e.g., 12">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Departure City</label>
+              <input type="text" th:field="*{departureCity}" class="form-control" placeholder="e.g., New York">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Included Services</label>
+              <input type="text" th:field="*{includedServices}" class="form-control"
+                placeholder="e.g., Hotel,Flight,Meals,Transport,Guide">
+              <small class="text-muted">Comma-separated values</small>
+            </div>
+          </div>
+
+          <!-- Status -->
+          <h5 class="fw-bold mb-4 pb-2 border-bottom"><i class="bi bi-toggles me-2 text-primary"></i>Status</h5>
+          <div class="row g-4 mb-5">
+            <div class="col-md-6">
+              <div class="form-check form-switch fs-5 mb-2">
+                <input class="form-check-input" type="checkbox" role="switch" id="activeSwitch" th:field="*{active}">
+                <label class="form-check-label fs-6 fw-medium mt-1 ms-2" for="activeSwitch">Active (Visible to
+                  users)</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-check form-switch fs-5 mb-2">
+                <input class="form-check-input" type="checkbox" role="switch" id="featuredSwitch"
+                  th:field="*{featured}">
+                <label class="form-check-label fs-6 fw-medium mt-1 ms-2" for="featuredSwitch">Featured Tour</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Itinerary -->
+          <h5 class="fw-bold mb-4 pb-2 border-bottom"><i class="bi bi-calendar-week me-2 text-primary"></i>Tour
+            Itinerary</h5>
+          <div id="itineraryContainer">
+            <div th:each="entry, stat : *{itineraryEntries}"
+              class="itinerary-entry card bg-light border-0 rounded-3 p-3 mb-3">
+              <div class="row g-3">
+                <div class="col-md-2">
+                  <label class="form-label fw-semibold small">Day</label>
+                  <input type="number" th:field="*{itineraryEntries[__${stat.index}__].dayNumber}" class="form-control"
+                    min="1">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label fw-semibold small">Title</label>
+                  <input type="text" th:field="*{itineraryEntries[__${stat.index}__].title}" class="form-control"
+                    placeholder="e.g., Arrival & City Tour">
+                </div>
+                <div class="col-md-5">
+                  <label class="form-label fw-semibold small">Description</label>
+                  <input type="text" th:field="*{itineraryEntries[__${stat.index}__].description}" class="form-control"
+                    placeholder="Details for this day...">
+                </div>
+                <div class="col-md-1 d-flex align-items-end">
+                  <button type="button" class="btn btn-outline-danger btn-sm rounded-pill w-100"
+                    onclick="this.closest('.itinerary-entry').remove()"><i class="bi bi-trash"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-outline-primary btn-sm rounded-pill mb-5" onclick="addItineraryRow()">
+            <i class="bi bi-plus-lg me-1"></i>Add Day
+          </button>
+
+          <!-- Submit -->
+          <div class="d-flex justify-content-end gap-3 border-top pt-4">
+            <a th:href="@{/admin/tours}" class="btn btn-light rounded-pill px-4 fw-medium">Cancel</a>
+            <button type="submit" class="btn btn-primary rounded-pill px-5 fw-medium">Save Tour</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/navbar :: scripts}"></div>
+  <script>
+    let itineraryIndex = document.querySelectorAll('.itinerary-entry').length;
+    function addItineraryRow() {
+      const container = document.getElementById('itineraryContainer');
+      const html = `
+        <div class="itinerary-entry card bg-light border-0 rounded-3 p-3 mb-3">
+          <div class="row g-3">
+            <div class="col-md-2">
+              <label class="form-label fw-semibold small">Day</label>
+              <input type="number" name="itineraryEntries[${itineraryIndex}].dayNumber" class="form-control" min="1" value="${itineraryIndex + 1}">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold small">Title</label>
+              <input type="text" name="itineraryEntries[${itineraryIndex}].title" class="form-control" placeholder="e.g., Arrival & City Tour">
+            </div>
+            <div class="col-md-5">
+              <label class="form-label fw-semibold small">Description</label>
+              <input type="text" name="itineraryEntries[${itineraryIndex}].description" class="form-control" placeholder="Details for this day...">
+            </div>
+            <div class="col-md-1 d-flex align-items-end">
+              <button type="button" class="btn btn-outline-danger btn-sm rounded-pill w-100" onclick="this.closest('.itinerary-entry').remove()"><i class="bi bi-trash"></i></button>
+            </div>
+          </div>
+        </div>
+      `;
+      container.insertAdjacentHTML('beforeend', html);
+      itineraryIndex++;
+    }
+  </script>
+</body>
+
+</html>

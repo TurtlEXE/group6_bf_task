@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+  <!-- Footer -->
+  <footer th:fragment="footer">
+    <div class="container">
+      <div class="row g-5">
+        <div class="col-lg-4">
+          <h5 class="mb-4 d-flex align-items-center gap-2 fw-bold text-dark">
+            <img th:src="@{/assets/images/logo.png}" alt="Logo" height="30">
+            Wanderlust
+          </h5>
+          <p class="text-muted small mb-4">Curated trips, authentic experiences and local guides to make travel effortless.</p>
+          <div class="social-links">
+            <a href="#"><i class="bi bi-facebook"></i></a>
+            <a href="#"><i class="bi bi-instagram"></i></a>
+            <a href="#"><i class="bi bi-twitter"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-3 offset-lg-1">
+          <h6 class="mb-4 fw-bold text-dark">Explore</h6>
+          <ul class="list-unstyled text-muted small">
+            <li class="mb-3"><a th:href="@{/destinations}" class="text-decoration-none text-muted">Destinations</a></li>
+            <li class="mb-3"><a th:href="@{/tours}" class="text-decoration-none text-muted">Tours</a></li>
+            <li class="mb-3"><a href="#" class="text-decoration-none text-muted">Blog</a></li>
+            <li class="mb-3"><a href="#" class="text-decoration-none text-muted">About Us</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <h6 class="mb-4 fw-bold text-dark">Contact</h6>
+          <ul class="list-unstyled text-muted small mb-4">
+            <li class="mb-2"><a href="mailto:hello@wanderlust.com" class="text-decoration-none text-muted">hello@wanderlust.com</a></li>
+            <li class="mb-2">+1 (415) 555-0182</li>
+            <li class="mb-2">123 Voyage Ave, San Francisco, CA</li>
+          </ul>
+          <p class="text-muted small mb-2">Subscribe to our newsletter</p>
+          <form class="d-flex">
+            <input type="email" class="form-control form-control-sm rounded-start border-end-0 shadow-none" placeholder="Your email">
+            <button class="btn btn-primary btn-sm px-3 rounded-end" type="button">Subscribe</button>
+          </form>
+        </div>
+      </div>
+      <div class="mt-5 pt-4 border-top text-muted small d-flex justify-content-between align-items-center flex-wrap">
+        <div>&copy; 2026 Wanderlust Travels. All rights reserved.</div>
+        <div class="d-flex gap-3 mt-3 mt-md-0">
+          <span><i class="bi bi-shield-check me-1"></i> Secure Payment</span>
+          <span><i class="bi bi-people me-1"></i> 10k+ Happy Travelers</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

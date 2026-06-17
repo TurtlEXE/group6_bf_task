@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/navbar :: head('Destinations')}"></head>
+<body>
+
+  <nav th:replace="~{fragments/navbar :: navbar('destinations')}"></nav>
+
+  <!-- Page Header -->
+  <div class="bg-primary text-white py-5 text-center"
+    style="background: linear-gradient(135deg, var(--primary-color), var(--accent-color));">
+    <div class="container py-4">
+      <h1 class="display-4 fw-bold">Explore Destinations</h1>
+      <p class="lead mb-0">Find your next perfect getaway from our curated list of places.</p>
+    </div>
+  </div>
+
+  <div class="container py-5">
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4">
+        <div class="card custom-card">
+          <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Dubai">
+          <div class="card-body">
+            <h5 class="card-title">Dubai, UAE</h5>
+            <p class="card-text text-muted">Experience luxury, modern architecture, and a lively nightlife scene.</p>
+            <a th:href="@{/tours(keyword='Dubai')}" class="btn btn-outline-primary btn-sm rounded-pill w-100">View Tours</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="card custom-card">
+          <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Paris">
+          <div class="card-body">
+            <h5 class="card-title">Paris, France</h5>
+            <p class="card-text text-muted">The city of love, featuring the Eiffel Tower, art, and gastronomy.</p>
+            <a th:href="@{/tours(keyword='Paris')}" class="btn btn-outline-primary btn-sm rounded-pill w-100">View Tours</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="card custom-card">
+          <img src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Tokyo">
+          <div class="card-body">
+            <h5 class="card-title">Tokyo, Japan</h5>
+            <p class="card-text text-muted">A vibrant mix of traditional culture, neon lights, and amazing food.</p>
+            <a th:href="@{/tours(keyword='Tokyo')}" class="btn btn-outline-primary btn-sm rounded-pill w-100">View Tours</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer th:replace="~{fragments/footer :: footer}"></footer>
+  <div th:replace="~{fragments/navbar :: scripts}"></div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "AUTH_001": "Tên đăng nhập là bắt buộc",
+  "AUTH_002": "Tên đăng nhập này đã được sử dụng",
+  "AUTH_003": "Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới (3-30 ký tự)",
+  "AUTH_004": "Địa chỉ email là bắt buộc",
+  "AUTH_005": "Vui lòng nhập địa chỉ email hợp lệ",
+  "AUTH_006": "Email này đã có tài khoản",
+  "AUTH_007": "Vui lòng xác minh email trước khi đăng nhập",
+  "AUTH_008": "Mật khẩu là bắt buộc",
+  "AUTH_009": "Mật khẩu phải có ít nhất 6 ký tự",
+  "AUTH_010": "Mật khẩu phải chứa chữ hoa, chữ thường và số",
+  "AUTH_011": "Mật khẩu xác nhận không khớp",
+  "AUTH_012": "Email hoặc mật khẩu không đúng",
+  "AUTH_013": "Tài khoản đã bị vô hiệu hóa",
+  "AUTH_014": "Liên kết xác minh đã hết hạn. Vui lòng đăng ký lại.",
+  "AUTH_015": "Liên kết xác minh không hợp lệ",
+
+  "TOUR_001": "Không tìm thấy tour",
+  "TOUR_002": "Tiêu đề tour là bắt buộc",
+  "TOUR_003": "Giá tour không hợp lệ",
+  "TOUR_004": "Xóa tour thất bại",
+
+  "GEN_001": "Vui lòng kiểm tra lại thông tin nhập và thử lại",
+  "GEN_002": "Có lỗi bất ngờ xảy ra. Vui lòng thử lại sau.",
+  "GEN_003": "Từ chối truy cập. Bạn không có quyền xem trang này."
+}

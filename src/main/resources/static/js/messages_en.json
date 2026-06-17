@@ -1,0 +1,26 @@
+{
+  "AUTH_001": "Username is required",
+  "AUTH_002": "This username is already taken",
+  "AUTH_003": "Username can only contain letters, numbers and underscores (3-30 chars)",
+  "AUTH_004": "Email address is required",
+  "AUTH_005": "Please enter a valid email address",
+  "AUTH_006": "An account with this email already exists",
+  "AUTH_007": "Please verify your email before logging in",
+  "AUTH_008": "Password is required",
+  "AUTH_009": "Password must be at least 6 characters",
+  "AUTH_010": "Password must contain uppercase, lowercase and number",
+  "AUTH_011": "Passwords do not match",
+  "AUTH_012": "Invalid email or password",
+  "AUTH_013": "Account is disabled",
+  "AUTH_014": "Verification link has expired. Please register again.",
+  "AUTH_015": "Invalid verification link",
+
+  "TOUR_001": "Tour not found",
+  "TOUR_002": "Tour title is required",
+  "TOUR_003": "Invalid tour price",
+  "TOUR_004": "Failed to delete tour",
+
+  "GEN_001": "Please check your input and try again",
+  "GEN_002": "An unexpected error occurred. Please try again later.",
+  "GEN_003": "Access denied. You don't have permission to access this resource."
+}

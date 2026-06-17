@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/navbar :: head(${tour.title})}"></head>
+<body>
+
+  <nav th:replace="~{fragments/navbar :: navbar('tours')}"></nav>
+
+  <!-- Hero Banner -->
+  <div class="tour-detail-banner" th:style="'background-image: url(' + ${tour.imageUrl} + ')'">
+    <div class="tour-detail-banner-overlay"></div>
+    <div class="container position-relative" style="z-index: 1;">
+      <span class="badge bg-primary rounded-pill px-3 py-2 mb-3" th:text="${tour.category}">CATEGORY</span>
+      <h1 class="display-5 fw-bold text-white mb-2" th:text="${tour.title}">Tour Title</h1>
+      <p class="text-white-50 fs-5 mb-0"><i class="bi bi-geo-alt me-2"></i><span th:text="${tour.location}">Location</span></p>
+    </div>
+  </div>
+
+  <div class="container py-5">
+    <div class="row g-5">
+
+      <!-- Main Content -->
+      <div class="col-lg-8">
+
+        <!-- Description -->
+        <section class="mb-5">
+          <h3 class="fw-bold mb-4 pb-2 border-bottom">Description</h3>
+          <p class="text-muted lh-lg" th:text="${tour.description}">Tour description</p>
+
+          <!-- Included Services -->
+          <div class="tour-services mt-4" th:if="${tour.includedServices != null}">
+            <div class="row g-3">
+              <div class="col-6 col-md-4" th:each="service : ${tour.includedServices.split(',')}">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                  <span class="text-muted" th:text="${service.trim()}">Service</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tour Itinerary -->
+        <section class="mb-5" th:if="${!itineraries.isEmpty()}">
+          <h3 class="fw-bold mb-4 pb-2 border-bottom">Tour Plan</h3>
+          <div class="accordion tour-itinerary" id="itineraryAccordion">
+            <div class="accordion-item border-0 mb-3 rounded-3 overflow-hidden shadow-sm" th:each="it, stat : ${itineraries}">
+              <h2 class="accordion-header">
+                <button class="accordion-button fw-bold" th:classappend="${!stat.first} ? 'collapsed'" type="button"
+                        data-bs-toggle="collapse" th:attr="data-bs-target='#day' + ${it.dayNumber}">
+                  <span class="itinerary-day-badge me-3" th:text="'Day ' + ${it.dayNumber}">Day 1</span>
+                  <span th:text="${it.title}">Title</span>
+                </button>
+              </h2>
+              <div th:id="'day' + ${it.dayNumber}" class="accordion-collapse collapse" th:classappend="${stat.first} ? 'show'"
+                   data-bs-parent="#itineraryAccordion">
+                <div class="accordion-body text-muted" th:text="${it.description}">Description for this day.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Location -->
+        <section class="mb-5">
+          <h3 class="fw-bold mb-4 pb-2 border-bottom">Location</h3>
+          <div class="tour-location-map">
+            <i class="bi bi-geo-alt-fill display-4 text-primary mb-3"></i>
+            <h5 th:text="${tour.location}">Location</h5>
+            <p class="text-muted mb-0" th:if="${tour.departureCity != null}">Departure from: <span th:text="${tour.departureCity}">City</span></p>
+          </div>
+        </section>
+
+        <!-- Related Tours -->
+        <section th:if="${!relatedTours.isEmpty()}">
+          <h3 class="fw-bold mb-4 pb-2 border-bottom">You May Also Like</h3>
+          <div class="row g-4">
+            <div class="col-md-4" th:each="rt : ${relatedTours}">
+              <a th:href="@{/tours/{id}(id=${rt.id})}" class="text-decoration-none">
+                <div class="card custom-card h-100">
+                  <img th:src="${rt.imageUrl}" class="card-img-top" style="height: 160px; object-fit: cover;" th:alt="${rt.title}">
+                  <div class="card-body p-3">
+                    <h6 class="fw-bold mb-1" th:text="${rt.title}">Title</h6>
+                    <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1"></i><span th:text="${rt.location}">Location</span></p>
+                    <span class="fw-bold text-primary" th:text="'$' + ${#numbers.formatDecimal(rt.price, 1, 0)}">$0</span>
+                    <span class="text-muted small"> / person</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="col-lg-4">
+        <div class="tour-detail-sidebar">
+          <h5 class="fw-bold mb-4 text-center">Tour Information</h5>
+
+          <div class="tour-info-item">
+            <div class="tour-info-icon"><i class="bi bi-currency-dollar"></i></div>
+            <div>
+              <small class="text-muted">Price</small>
+              <h5 class="mb-0 fw-bold text-primary" th:text="'$' + ${#numbers.formatDecimal(tour.price, 1, 2)}">$0.00</h5>
+              <small class="text-muted">per person</small>
+            </div>
+          </div>
+
+          <div class="tour-info-item">
+            <div class="tour-info-icon"><i class="bi bi-clock"></i></div>
+            <div>
+              <small class="text-muted">Duration</small>
+              <h6 class="mb-0 fw-bold" th:text="${tour.durationDays} + ' Days'">0 Days</h6>
+            </div>
+          </div>
+
+          <div class="tour-info-item">
+            <div class="tour-info-icon"><i class="bi bi-tags"></i></div>
+            <div>
+              <small class="text-muted">Category</small>
+              <h6 class="mb-0 fw-bold" th:text="${tour.category}">Category</h6>
+            </div>
+          </div>
+
+          <div class="tour-info-item" th:if="${tour.maxPersons != null}">
+            <div class="tour-info-icon"><i class="bi bi-people"></i></div>
+            <div>
+              <small class="text-muted">Max Group Size</small>
+              <h6 class="mb-0 fw-bold" th:text="${tour.maxPersons} + ' People'">0 People</h6>
+            </div>
+          </div>
+
+          <div class="tour-info-item" th:if="${tour.minAge != null}">
+            <div class="tour-info-icon"><i class="bi bi-person-check"></i></div>
+            <div>
+              <small class="text-muted">Min Age</small>
+              <h6 class="mb-0 fw-bold" th:text="${tour.minAge} + '+'">0+</h6>
+            </div>
+          </div>
+
+          <div class="tour-info-item" th:if="${tour.departureCity != null}">
+            <div class="tour-info-icon"><i class="bi bi-airplane"></i></div>
+            <div>
+              <small class="text-muted">Departure</small>
+              <h6 class="mb-0 fw-bold" th:text="${tour.departureCity}">City</h6>
+            </div>
+          </div>
+
+          <div class="tour-info-item" th:if="${tour.location != null}">
+            <div class="tour-info-icon"><i class="bi bi-geo-alt"></i></div>
+            <div>
+              <small class="text-muted">Destination</small>
+              <h6 class="mb-0 fw-bold" th:text="${tour.location}">Location</h6>
+            </div>
+          </div>
+
+          <a th:href="@{/tours}" class="btn btn-primary w-100 py-3 fw-bold rounded-3 mt-3">
+            <i class="bi bi-arrow-left me-2"></i>Back to Tours
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer th:replace="~{fragments/footer :: footer}"></footer>
+  <div th:replace="~{fragments/navbar :: scripts}"></div>
+</body>
+</html>
