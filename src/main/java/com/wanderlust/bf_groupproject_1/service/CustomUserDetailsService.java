@@ -23,14 +23,27 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseGet(() -> userRepository.findByUsername(identifier)
                         .orElseThrow(() -> new UsernameNotFoundException("User not found with username or email: " + identifier)));
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
+        String fullName = "";
+        if (user.getFirstName() != null && !user.getFirstName().trim().isEmpty()) {
+            fullName += user.getFirstName().trim();
+        }
+        if (user.getLastName() != null && !user.getLastName().trim().isEmpty()) {
+            if (!fullName.isEmpty()) fullName += " ";
+            fullName += user.getLastName().trim();
+        }
+        if (fullName.isEmpty()) {
+            fullName = user.getUsername(); // fallback to username if no names provided
+        }
+
+        return new com.wanderlust.bf_groupproject_1.security.CustomUserDetails(
+                user.getEmail(), // keep email as the principal name for compatibility
                 user.getPassword(),
                 user.isEnabled() && user.isEmailVerified(),
                 true,
                 true,
                 true,
-                Collections.singleton(new SimpleGrantedAuthority(user.getRole().name()))
+                Collections.singleton(new SimpleGrantedAuthority(user.getRole().name())),
+                fullName
         );
     }
 }

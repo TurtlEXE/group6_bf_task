@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface VerificationTokenRepository extends JpaRepository<VerificationToken, Long> {
     Optional<VerificationToken> findByToken(String token);
+    void deleteByUser(com.wanderlust.bf_groupproject_1.entity.User user);
 }

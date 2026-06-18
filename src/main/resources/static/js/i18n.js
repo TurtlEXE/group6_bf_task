@@ -5,7 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const successMsg = urlParams.get('success');
 
     if (errorCode || successMsg) {
-        if (errorCode) {
+        if (errorCode === 'AUTH_007') {
+            showToast('Account not verified. Please check your email to verify before logging in.', 'warning');
+        } else if (errorCode) {
             showToast('Invalid username/email or password. Please try again.', 'danger');
         }
         

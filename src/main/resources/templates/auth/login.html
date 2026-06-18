@@ -1,26 +1,37 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/navbar :: head('Login')}"></head>
-<body style="background-color: #f4f7f6;">
 
-  <div class="container auth-wrapper" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 3rem 15px;">
-    <div class="row g-0 auth-card" style="border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); overflow: hidden; background: var(--white); max-width: 1100px; width: 100%;">
-      
+<head th:replace="~{fragments/navbar :: head('Login')}"></head>
+
+<body
+  style="background: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?q=80&w=1622&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center/cover; background-attachment: fixed;">
+
+  <div class="container-fluid auth-wrapper"
+    style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 3rem 15px; background: rgba(17, 24, 39, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
+    <div class="row g-0 auth-card"
+      style="border-radius: 24px; box-shadow: 0 30px 60px rgba(0,0,0,0.4); overflow: hidden; background: #ffffff; max-width: 1100px; width: 100%;">
+
       <!-- Image Side -->
       <div class="col-lg-6">
-        <div class="auth-image" style="background: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80') no-repeat center center/cover; min-height: 300px; height: 100%; position: relative;">
-          <div class="auth-image-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(79, 70, 229, 0.1), rgba(17, 24, 39, 0.85)); display: flex; flex-direction: column; justify-content: flex-end; padding: 4rem; color: white;">
+        <div class="auth-image"
+          style="background: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center/cover; min-height: 300px; height: 100%; position: relative;">
+          <div class="auth-image-overlay"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(79, 70, 229, 0.1), rgba(17, 24, 39, 0.85)); display: flex; flex-direction: column; justify-content: flex-end; padding: 4rem; color: white;">
             <h2 class="fw-bold mb-3 display-6">Welcome Back</h2>
-            <p class="mb-0 fs-5 text-white-50">Log in to unlock exclusive travel deals, manage your bookings, and plan your next dream vacation.</p>
+            <p class="mb-0 fs-5 text-white-50">Log in to unlock exclusive travel deals, manage your bookings, and plan
+              your next dream vacation.</p>
           </div>
         </div>
       </div>
 
       <!-- Form Side -->
       <div class="col-lg-6">
-        <div class="auth-form-container" style="padding: 5rem 4rem; display: flex; flex-direction: column; justify-content: center; height: 100%; background-color: #ffffff;">
+        <div class="auth-form-container"
+          style="padding: 5rem 4rem; display: flex; flex-direction: column; justify-content: center; height: 100%; background-color: #ffffff;">
           <div class="mb-5 text-center text-lg-start">
-            <a th:href="@{/}" class="text-muted text-decoration-none small d-inline-flex align-items-center mb-3 fw-medium"><i class="bi bi-arrow-left me-2"></i> Back to Home</a><br>
+            <a th:href="@{/}"
+              class="text-muted text-decoration-none small d-inline-flex align-items-center mb-3 fw-medium"><i
+                class="bi bi-arrow-left me-2"></i> Back to Home</a><br>
             <a th:href="@{/}" class="d-inline-flex align-items-center gap-2 text-decoration-none text-dark mb-4">
               <img th:src="@{/assets/images/logo.png}" alt="Wanderlust Logo" height="40">
               <span class="fw-bold fs-4 text-primary">Wanderlust</span>
@@ -30,24 +41,31 @@
           </div>
 
           <form th:action="@{/login}" method="post">
-            
+
             <div class="mb-4">
-              <label class="form-label fw-semibold text-dark mb-2">Username or Email Address</label>
+              <label class="form-label fw-semibold text-dark mb-2">Username or Email Address <span
+                  class="text-danger">*</span></label>
               <div class="input-group">
-                <span class="input-group-text bg-transparent border-end-0 border" style="border-radius: 12px 0 0 12px; border-color: #e2e8f0;">
+                <span class="input-group-text bg-transparent border-end-0 border"
+                  style="border-radius: 12px 0 0 12px; border-color: #e2e8f0;">
                   <i class="bi bi-person text-muted"></i>
                 </span>
-                <input type="text" name="username" class="form-control form-control-lg border-start-0 ps-0" placeholder="Enter your username or email" required style="border-radius: 0 12px 12px 0; background-color: #f8fafc; font-size: 1rem;">
+                <input type="text" name="username" class="form-control form-control-lg border-start-0 ps-0"
+                  placeholder="Enter your username or email" required
+                  style="border-radius: 0 12px 12px 0; background-color: #f8fafc; font-size: 1rem;">
               </div>
             </div>
-            
+
             <div class="mb-4">
-              <label class="form-label fw-semibold text-dark mb-2">Password</label>
+              <label class="form-label fw-semibold text-dark mb-2">Password <span class="text-danger">*</span></label>
               <div class="input-group">
-                <span class="input-group-text bg-transparent border-end-0 border" style="border-radius: 12px 0 0 12px; border-color: #e2e8f0;">
+                <span class="input-group-text bg-transparent border-end-0 border"
+                  style="border-radius: 12px 0 0 12px; border-color: #e2e8f0;">
                   <i class="bi bi-lock text-muted"></i>
                 </span>
-                <input type="password" name="password" class="form-control form-control-lg border-start-0 ps-0" placeholder="Enter your password" required style="border-radius: 0 12px 12px 0; background-color: #f8fafc; font-size: 1rem;">
+                <input type="password" name="password" class="form-control form-control-lg border-start-0 ps-0"
+                  placeholder="Enter your password" required
+                  style="border-radius: 0 12px 12px 0; background-color: #f8fafc; font-size: 1rem;">
               </div>
             </div>
 
@@ -56,31 +74,38 @@
                 <input type="checkbox" name="rememberMe" class="form-check-input" id="rememberMe">
                 <label class="form-check-label text-muted" for="rememberMe">Remember me for 30 days</label>
               </div>
-              <a th:href="@{/forgot-password}" class="small text-primary text-decoration-none fw-medium">Forgot password?</a>
+              <a th:href="@{/forgot-password}" class="small text-primary text-decoration-none fw-medium">Forgot
+                password?</a>
             </div>
-            
-            <button type="submit" class="btn btn-primary btn-auth mb-4 w-100 py-3 rounded-3 fw-bold fs-5 shadow-sm">Sign In</button>
-            
+
+            <button type="submit" class="btn btn-primary btn-auth mb-4 w-100 py-3 rounded-3 fw-bold fs-5 shadow-sm">Sign
+              In</button>
+
             <div class="position-relative mb-4 text-center">
               <hr class="text-muted opacity-25">
-              <span class="position-absolute top-50 start-50 translate-middle bg-white px-4 text-muted small fw-medium">OR CONTINUE WITH</span>
+              <span
+                class="position-absolute top-50 start-50 translate-middle bg-white px-4 text-muted small fw-medium">OR
+                CONTINUE WITH</span>
             </div>
 
             <div class="row g-3 mb-4">
               <div class="col-sm-6">
-                <button type="button" class="btn social-login-btn w-100 border bg-white rounded-3 py-2 d-flex align-items-center justify-content-center gap-2">
+                <button type="button"
+                  class="btn social-login-btn w-100 border bg-white rounded-3 py-2 d-flex align-items-center justify-content-center gap-2">
                   <i class="bi bi-google text-danger fs-5"></i> Google
                 </button>
               </div>
               <div class="col-sm-6">
-                <button type="button" class="btn social-login-btn w-100 border bg-white rounded-3 py-2 d-flex align-items-center justify-content-center gap-2">
+                <button type="button"
+                  class="btn social-login-btn w-100 border bg-white rounded-3 py-2 d-flex align-items-center justify-content-center gap-2">
                   <i class="bi bi-facebook text-primary fs-5"></i> Facebook
                 </button>
               </div>
             </div>
 
             <p class="text-center text-muted mb-0 mt-4">
-              Don't have an account? <a th:href="@{/register}" class="text-primary fw-bold text-decoration-none">Sign Up</a>
+              Don't have an account? <a th:href="@{/register}" class="text-primary fw-bold text-decoration-none">Sign
+                Up</a>
             </p>
           </form>
         </div>
@@ -91,4 +116,5 @@
 
   <div th:replace="~{fragments/navbar :: scripts}"></div>
 </body>
+
 </html>
