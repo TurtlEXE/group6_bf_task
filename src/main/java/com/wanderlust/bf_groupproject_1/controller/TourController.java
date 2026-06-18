@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.List;
 
 @Controller
@@ -32,8 +34,11 @@ public class TourController {
     public String listToursPublic(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String category,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
             @RequestParam(defaultValue = "0") int page,
-            Model model) {
+            Model model,
+            HttpServletRequest request) {
         
         TourCategory cat = null;
         if (category != null && !category.isEmpty()) {
@@ -42,11 +47,17 @@ public class TourController {
             } catch (IllegalArgumentException ignored) {}
         }
 
-        Page<Tour> tours = tourService.searchActiveTours(keyword, cat, PageRequest.of(page, 8));
+        Page<Tour> tours = tourService.searchActiveTours(keyword, cat, minPrice, maxPrice, PageRequest.of(page, 8));
         model.addAttribute("tours", tours);
         model.addAttribute("keyword", keyword);
         model.addAttribute("selectedCategory", category);
+        model.addAttribute("minPrice", minPrice);
+        model.addAttribute("maxPrice", maxPrice);
         model.addAttribute("categories", TourCategory.values());
+        
+        if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+            return "tours/list :: tourListFragment";
+        }
         return "tours/list";
     }
 

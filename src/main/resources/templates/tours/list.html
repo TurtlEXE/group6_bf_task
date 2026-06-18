@@ -8,7 +8,7 @@
   <!-- Page Header Banner -->
   <div class="tour-page-header">
     <div class="tour-page-header-overlay"></div>
-    <div class="container position-relative" style="z-index: 1;">
+    <div class="container position-relative text-center" style="z-index: 1;">
       <h1 class="display-5 fw-bold text-white mb-2">Tour Packages</h1>
       <p class="text-white-50 mb-0">Find the perfect itinerary for your next holiday</p>
     </div>
@@ -20,27 +20,37 @@
       <!-- Sidebar Filters -->
       <div class="col-lg-3">
         <div class="filter-sidebar">
-          <!-- Search -->
-          <div class="filter-section">
-            <h6 class="filter-title"><i class="bi bi-search me-2"></i>SEARCH</h6>
-            <form th:action="@{/tours}" method="get">
-              <input type="hidden" name="category" th:value="${selectedCategory}">
+          <form id="filterForm" th:action="@{/tours}" method="get">
+            <input type="hidden" name="category" th:value="${selectedCategory}">
+            
+            <!-- Search -->
+            <div class="filter-section">
+              <h6 class="filter-title"><i class="bi bi-search me-2"></i>SEARCH</h6>
               <div class="mb-3">
                 <input type="text" name="keyword" class="form-control form-control-sm" placeholder="Search tours..." th:value="${keyword}">
               </div>
-              <button type="submit" class="btn btn-primary w-100 btn-sm rounded-pill">Search</button>
-            </form>
-          </div>
+            </div>
+
+            <!-- Price Range -->
+            <div class="filter-section">
+              <h6 class="filter-title"><i class="bi bi-cash me-2"></i>PRICE RANGE</h6>
+              <div class="d-flex gap-2 mb-3">
+                <input type="number" name="minPrice" class="form-control form-control-sm" placeholder="Min $" th:value="${minPrice}">
+                <input type="number" name="maxPrice" class="form-control form-control-sm" placeholder="Max $" th:value="${maxPrice}">
+              </div>
+              <button type="submit" class="btn btn-primary w-100 btn-sm rounded-pill">Apply Filters</button>
+            </div>
+          </form>
 
           <!-- Categories -->
           <div class="filter-section">
             <h6 class="filter-title"><i class="bi bi-grid me-2"></i>CATEGORIES</h6>
             <ul class="filter-list">
               <li th:classappend="${selectedCategory == null} ? 'active'">
-                <a th:href="@{/tours(keyword=${keyword})}">All Tours</a>
+                <a href="#" class="category-link" data-category="">All Tours</a>
               </li>
               <li th:each="cat : ${categories}" th:classappend="${selectedCategory == cat.name()} ? 'active'">
-                <a th:href="@{/tours(category=${cat.name()}, keyword=${keyword})}" th:text="${cat}">Category</a>
+                <a href="#" class="category-link" th:data-category="${cat.name()}" th:text="${cat}">Category</a>
               </li>
             </ul>
           </div>
@@ -49,69 +59,149 @@
 
       <!-- Tours List -->
       <div class="col-lg-9">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <p class="text-muted mb-0"><span class="fw-bold text-dark" th:text="${tours.totalElements}">0</span> tours found</p>
-        </div>
+        <div id="userTourListContainer" th:fragment="tourListFragment">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <p class="text-muted mb-0"><span class="fw-bold text-dark" th:text="${tours.totalElements}">0</span> tours found</p>
+          </div>
 
-        <div class="d-flex flex-column gap-4">
-          <div class="tour-card-h" th:each="tour : ${tours.content}">
-            <div class="tour-card-h-img">
-              <img th:src="${tour.imageUrl}" th:alt="${tour.title}">
-              <span class="tour-card-badge" th:text="${tour.category}">CATEGORY</span>
-            </div>
-            <div class="tour-card-h-body">
-              <div class="tour-card-h-top">
-                <div>
-                  <h5 class="tour-card-h-title" th:text="${tour.title}">Tour Title</h5>
-                  <div class="tour-card-h-rating">
-                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+          <div class="d-flex flex-column gap-4">
+            <div class="tour-card-h" th:each="tour : ${tours.content}">
+              <div class="tour-card-h-img">
+                <img th:src="${tour.imageUrl}" th:alt="${tour.title}">
+                <span class="tour-card-badge" th:text="${tour.category}">CATEGORY</span>
+              </div>
+              <div class="tour-card-h-body">
+                <div class="tour-card-h-top">
+                  <div>
+                    <h5 class="tour-card-h-title" th:text="${tour.title}">Tour Title</h5>
+                    <div class="tour-card-h-rating">
+                      <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+                    </div>
                   </div>
                 </div>
+                <p class="tour-card-h-desc" th:text="${#strings.abbreviate(tour.description, 180)}">Description</p>
+                <div class="tour-card-h-meta">
+                  <span><i class="bi bi-clock"></i> <span th:text="${tour.durationDays} + ' Days'">7 Days</span></span>
+                  <span><i class="bi bi-people"></i> <span th:text="${tour.maxPersons != null ? tour.maxPersons + ' People' : 'Group'}">Group</span></span>
+                  <span><i class="bi bi-geo-alt"></i> <span th:text="${tour.location}">Location</span></span>
+                </div>
               </div>
-              <p class="tour-card-h-desc" th:text="${#strings.abbreviate(tour.description, 180)}">Description</p>
-              <div class="tour-card-h-meta">
-                <span><i class="bi bi-clock"></i> <span th:text="${tour.durationDays} + ' Days'">7 Days</span></span>
-                <span><i class="bi bi-people"></i> <span th:text="${tour.maxPersons != null ? tour.maxPersons + ' People' : 'Group'}">Group</span></span>
-                <span><i class="bi bi-geo-alt"></i> <span th:text="${tour.location}">Location</span></span>
+              <div class="tour-card-h-price">
+                <div class="tour-price-tag">
+                  <span class="tour-price-amount" th:text="'$' + ${#numbers.formatDecimal(tour.price, 1, 0)}">$499</span>
+                  <span class="tour-price-label">Per Person</span>
+                </div>
+                <div class="tour-card-h-actions">
+                  <a th:href="@{/tours/{id}(id=${tour.id})}" class="btn btn-sm btn-outline-primary rounded-pill px-3">Details</a>
+                </div>
               </div>
             </div>
-            <div class="tour-card-h-price">
-              <div class="tour-price-tag">
-                <span class="tour-price-amount" th:text="'$' + ${#numbers.formatDecimal(tour.price, 1, 0)}">$499</span>
-                <span class="tour-price-label">Per Person</span>
-              </div>
-              <div class="tour-card-h-actions">
-                <a th:href="@{/tours/{id}(id=${tour.id})}" class="btn btn-sm btn-outline-primary rounded-pill px-3">Details</a>
-              </div>
+
+            <div th:if="${#lists.isEmpty(tours.content)}" class="text-center py-5">
+              <i class="bi bi-compass display-1 text-muted"></i>
+              <h4 class="text-muted mt-3">No tours found matching your criteria.</h4>
+              <a th:href="@{/tours}" class="btn btn-primary mt-3 rounded-pill px-4">Browse All Tours</a>
             </div>
           </div>
 
-          <div th:if="${#lists.isEmpty(tours.content)}" class="text-center py-5">
-            <i class="bi bi-compass display-1 text-muted"></i>
-            <h4 class="text-muted mt-3">No tours found matching your criteria.</h4>
-            <a th:href="@{/tours}" class="btn btn-primary mt-3 rounded-pill px-4">Browse All Tours</a>
-          </div>
+          <!-- Pagination -->
+          <nav class="mt-5 d-flex justify-content-center" th:if="${tours.totalPages > 1}">
+            <ul class="pagination">
+              <li class="page-item" th:classappend="${tours.first} ? 'disabled'">
+                <a class="page-link" th:href="@{/tours(page=${tours.number - 1}, keyword=${keyword}, category=${selectedCategory})}"><i class="bi bi-chevron-left"></i> Previous</a>
+              </li>
+              <li class="page-item" th:each="i : ${#numbers.sequence(0, tours.totalPages - 1)}" th:classappend="${tours.number == i} ? 'active'">
+                <a class="page-link" th:href="@{/tours(page=${i}, keyword=${keyword}, category=${selectedCategory})}" th:text="${i + 1}">1</a>
+              </li>
+              <li class="page-item" th:classappend="${tours.last} ? 'disabled'">
+                <a class="page-link" th:href="@{/tours(page=${tours.number + 1}, keyword=${keyword}, category=${selectedCategory})}">Next <i class="bi bi-chevron-right"></i></a>
+              </li>
+            </ul>
+          </nav>
         </div>
-
-        <!-- Pagination -->
-        <nav class="mt-5 d-flex justify-content-center" th:if="${tours.totalPages > 1}">
-          <ul class="pagination">
-            <li class="page-item" th:classappend="${tours.first} ? 'disabled'">
-              <a class="page-link" th:href="@{/tours(page=${tours.number - 1}, keyword=${keyword}, category=${selectedCategory})}"><i class="bi bi-chevron-left"></i> Previous</a>
-            </li>
-            <li class="page-item" th:each="i : ${#numbers.sequence(0, tours.totalPages - 1)}" th:classappend="${tours.number == i} ? 'active'">
-              <a class="page-link" th:href="@{/tours(page=${i}, keyword=${keyword}, category=${selectedCategory})}" th:text="${i + 1}">1</a>
-            </li>
-            <li class="page-item" th:classappend="${tours.last} ? 'disabled'">
-              <a class="page-link" th:href="@{/tours(page=${tours.number + 1}, keyword=${keyword}, category=${selectedCategory})}">Next <i class="bi bi-chevron-right"></i></a>
-            </li>
-          </ul>
-        </nav>
       </div>
     </div>
   </div>
 
   <footer th:replace="~{fragments/footer :: footer}"></footer>
   <div th:replace="~{fragments/navbar :: scripts}"></div>
+
+  <script>
+    function loadTours(url) {
+        fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('userTourListContainer').outerHTML = html;
+            bindAjaxLinks();
+        })
+        .catch(error => console.error('Error fetching tours:', error));
+    }
+
+    function bindAjaxLinks() {
+        const container = document.getElementById('userTourListContainer');
+        if (container) {
+            container.querySelectorAll('.pagination a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const url = new URL(this.href);
+                    const searchForm = document.getElementById('filterForm');
+                    if (searchForm) {
+                        const formData = new FormData(searchForm);
+                        for (const pair of formData.entries()) {
+                            if (pair[1]) {
+                                url.searchParams.set(pair[0], pair[1]);
+                            }
+                        }
+                    }
+                    loadTours(url.toString());
+                });
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        bindAjaxLinks();
+
+        // Bind form submission
+        const searchForm = document.getElementById('filterForm');
+        if (searchForm) {
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(searchForm);
+                const url = new URL(searchForm.action);
+                for (const pair of formData.entries()) {
+                    if (pair[1]) {
+                        url.searchParams.set(pair[0], pair[1]);
+                    }
+                }
+                loadTours(url.toString());
+            });
+        }
+
+        // Bind category links
+        document.querySelectorAll('.category-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Update active class visually
+                document.querySelectorAll('.filter-list li').forEach(li => li.classList.remove('active'));
+                this.parentElement.classList.add('active');
+                
+                // Update hidden category input in the form
+                const catInput = document.querySelector('input[name="category"]');
+                if (catInput) catInput.value = this.getAttribute('data-category');
+                
+                // Trigger form submission
+                if (searchForm) {
+                    searchForm.dispatchEvent(new Event('submit'));
+                }
+            });
+        });
+    });
+  </script>
 </body>
 </html>
