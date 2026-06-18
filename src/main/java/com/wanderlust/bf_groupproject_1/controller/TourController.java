@@ -39,12 +39,13 @@ public class TourController {
             @RequestParam(defaultValue = "0") int page,
             Model model,
             HttpServletRequest request) {
-        
+
         TourCategory cat = null;
         if (category != null && !category.isEmpty()) {
             try {
                 cat = TourCategory.valueOf(category);
-            } catch (IllegalArgumentException ignored) {}
+            } catch (IllegalArgumentException ignored) {
+            }
         }
 
         Page<Tour> tours = tourService.searchActiveTours(keyword, cat, minPrice, maxPrice, PageRequest.of(page, 8));
@@ -54,7 +55,7 @@ public class TourController {
         model.addAttribute("minPrice", minPrice);
         model.addAttribute("maxPrice", maxPrice);
         model.addAttribute("categories", TourCategory.values());
-        
+
         if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
             return "tours/list :: tourListFragment";
         }
@@ -66,7 +67,7 @@ public class TourController {
         Tour tour = tourService.getTourById(id);
         List<TourItinerary> itineraries = tourService.getItinerariesByTourId(id);
         List<Tour> relatedTours = tourService.getRelatedTours(id, tour.getCategory());
-        
+
         model.addAttribute("tour", tour);
         model.addAttribute("itineraries", itineraries);
         model.addAttribute("relatedTours", relatedTours);

@@ -79,7 +79,17 @@ public class SecurityConfig {
                 .loginProcessingUrl("/login")
                 .passwordParameter("password")
                 .successHandler(loginSuccessHandler())
-                .failureUrl("/login?error=AUTH_012")
+                .failureHandler(new org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler() {
+                    @Override
+                    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+                            org.springframework.security.core.AuthenticationException exception) throws IOException, ServletException {
+                        if (exception instanceof org.springframework.security.authentication.DisabledException) {
+                            getRedirectStrategy().sendRedirect(request, response, "/login?error=AUTH_007");
+                        } else {
+                            getRedirectStrategy().sendRedirect(request, response, "/login?error=AUTH_012");
+                        }
+                    }
+                })
                 .permitAll()
             )
             .logout(logout -> logout

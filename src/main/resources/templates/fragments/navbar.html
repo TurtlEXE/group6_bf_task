@@ -56,7 +56,7 @@
             <a class="nav-link dropdown-toggle fw-medium d-flex align-items-center gap-2" href="#" id="userDropdown"
               role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-person-circle fs-5 text-primary"></i>
-              <span sec:authentication="name">User</span>
+              <span th:text="${#authentication.principal instanceof T(com.wanderlust.bf_groupproject_1.security.CustomUserDetails) ? #authentication.principal.fullName : #authentication.name}">User</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" aria-labelledby="userDropdown">
               <li sec:authorize="hasRole('ADMIN')">
