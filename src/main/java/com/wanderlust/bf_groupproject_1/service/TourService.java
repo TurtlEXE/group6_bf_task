@@ -32,19 +32,18 @@ public class TourService {
         return tourRepository.findByActiveTrue(pageable);
     }
 
-    public Page<Tour> searchActiveTours(String keyword, TourCategory category, Pageable pageable) {
-        if (category != null && keyword != null && !keyword.trim().isEmpty()) {
-            return tourRepository.findByActiveTrueAndCategoryAndTitleContainingIgnoreCase(category, keyword, pageable);
+    public Page<Tour> searchActiveTours(String keyword, TourCategory category, Double minPrice, Double maxPrice, Pageable pageable) {
+        if (keyword != null && keyword.trim().isEmpty()) {
+            keyword = null;
         }
-        if (category != null) {
-            return tourRepository.findByActiveTrueAndCategory(category, pageable);
+        return tourRepository.searchToursPublic(keyword, category, minPrice, maxPrice, pageable);
+    }
+
+    public Page<Tour> searchAllToursAdmin(String keyword, TourCategory category, Double minPrice, Double maxPrice, Pageable pageable) {
+        if (keyword != null && keyword.trim().isEmpty()) {
+            keyword = null;
         }
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            return tourRepository
-                    .findByActiveTrueAndTitleContainingIgnoreCaseOrActiveTrueAndLocationContainingIgnoreCase(keyword,
-                            keyword, pageable);
-        }
-        return getActiveTours(pageable);
+        return tourRepository.searchToursAdmin(keyword, category, minPrice, maxPrice, pageable);
     }
 
     public List<Tour> getFeaturedTours() {

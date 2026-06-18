@@ -8,98 +8,291 @@
   <div th:replace="~{fragments/admin-sidebar :: sidebar('tours')}"></div>
 
   <main class="admin-main">
-    <div class="admin-topbar">
-      <div>
-        <h4 class="mb-0 fw-bold">Manage Tours</h4>
-        <small class="text-muted">Create, edit, and manage tour packages</small>
-      </div>
-      <a th:href="@{/admin/tours/new}" class="btn btn-primary rounded-pill px-4"><i class="bi bi-plus-lg me-2"></i>New
-        Tour</a>
-    </div>
-
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-      <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-          <thead class="bg-light">
-            <tr>
-              <th class="ps-4">Tour</th>
-              <th>Location</th>
-              <th>Category</th>
-              <th>Price</th>
-              <th>Duration</th>
-              <th class="text-center">Status</th>
-              <th class="text-end pe-4">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr th:each="tour : ${tours.content}">
-              <td class="ps-4">
-                <div class="d-flex align-items-center gap-3">
-                  <img th:src="${tour.imageUrl}" class="rounded-3" style="width: 60px; height: 45px; object-fit: cover;"
-                    th:alt="${tour.title}">
-                  <div>
-                    <h6 class="mb-0 fw-semibold" th:text="${tour.title}">Title</h6>
-                    <small class="text-muted" th:if="${tour.featured}"><i class="bi bi-star-fill text-warning"></i>
-                      Featured</small>
-                  </div>
+    <!-- Top Bar -->
+    <div class="admin-topbar d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-light">
+        <div class="search-bar position-relative" style="max-width: 400px; width: 100%;">
+            <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+            <input type="text" id="adminSearchInput" th:value="${keyword}" class="form-control bg-light border-0 rounded-pill ps-5 py-2" placeholder="Search tours, codes, locations...">
+            <input type="hidden" id="adminCategoryInput" th:value="${selectedCategory}">
+        </div>
+        <div class="d-flex align-items-center gap-4">
+            <a href="#" class="text-dark position-relative fs-5"><i class="bi bi-bell"></i><span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"><span class="visually-hidden">New alerts</span></span></a>
+            <a href="#" class="text-dark fs-5"><i class="bi bi-question-circle"></i></a>
+            <div class="d-flex align-items-center gap-2 border-start ps-4">
+                <div class="text-end">
+                    <h6 class="mb-0 fw-bold fs-6">Alex Rivera</h6>
+                    <small class="text-muted" style="font-size: 0.75rem;">Senior Curator</small>
                 </div>
-              </td>
-              <td>
-                <span class="text-muted" th:text="${tour.location}">Location</span>
-              </td>
-              <td>
-                <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3"
-                  th:text="${tour.category}">CAT</span>
-              </td>
-              <td>
-                <span class="fw-bold" th:text="'$' + ${#numbers.formatDecimal(tour.price, 1, 2)}">$0</span>
-              </td>
-              <td>
-                <span th:text="${tour.durationDays} + ' days'">0 days</span>
-              </td>
-              <td class="text-center">
-                <span th:if="${tour.active}"
-                  class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Active</span>
-                <span th:unless="${tour.active}"
-                  class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3">Inactive</span>
-              </td>
-              <td class="text-end pe-4">
-                <a th:href="@{/admin/tours/{id}/edit(id=${tour.id})}"
-                  class="btn btn-sm btn-outline-primary rounded-pill px-3 me-1"><i class="bi bi-pencil"></i></a>
-                <form th:action="@{/admin/tours/{id}/delete(id=${tour.id})}" method="post" class="d-inline"
-                  onsubmit="return confirm('Are you sure you want to delete this tour?');">
-                  <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3"><i
-                      class="bi bi-trash"></i></button>
-                </form>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+                <img src="https://ui-avatars.com/api/?name=Alex+Rivera&background=random" class="rounded-circle" width="40" height="40" alt="Avatar">
+            </div>
+        </div>
+    </div>
 
-      <!-- Pagination -->
-      <div class="card-footer bg-white border-top-0 d-flex justify-content-between align-items-center p-3"
-        th:if="${tours.totalPages > 1}">
-        <small class="text-muted" th:text="'Page ' + (${tours.number} + 1) + ' of ' + ${tours.totalPages}"></small>
-        <nav>
-          <ul class="pagination pagination-sm mb-0">
-            <li class="page-item" th:classappend="${tours.first} ? 'disabled'">
-              <a class="page-link" th:href="@{/admin/tours(page=${tours.number - 1})}">Prev</a>
-            </li>
-            <li class="page-item" th:each="i : ${#numbers.sequence(0, tours.totalPages - 1)}"
-              th:classappend="${tours.number == i} ? 'active'">
-              <a class="page-link" th:href="@{/admin/tours(page=${i})}" th:text="${i + 1}">1</a>
-            </li>
-            <li class="page-item" th:classappend="${tours.last} ? 'disabled'">
-              <a class="page-link" th:href="@{/admin/tours(page=${tours.number + 1})}">Next</a>
-            </li>
-          </ul>
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-end mb-4">
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-2 small">
+            <li class="breadcrumb-item"><a href="/admin/dashboard" class="text-muted text-decoration-none">Dashboard</a></li>
+            <li class="breadcrumb-item active fw-medium text-primary" aria-current="page">Tours</li>
+          </ol>
         </nav>
+        <h2 class="mb-1 fw-bold text-dark">Manage Tours</h2>
+        <p class="text-muted mb-0">Create, edit, and manage your global tour packages with ease.</p>
+      </div>
+      <a th:href="@{/admin/tours/new}" class="btn btn-primary rounded-3 px-4 py-2 fw-medium shadow-sm"><i class="bi bi-plus-lg me-2"></i>New Tour</a>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm rounded-3 h-100">
+          <div class="card-body p-4">
+            <p class="text-muted small fw-medium mb-1">Total Active Tours</p>
+            <div class="d-flex align-items-end gap-2">
+              <h3 class="mb-0 fw-bold">124</h3>
+              <small class="text-success fw-medium mb-1"><i class="bi bi-graph-up-arrow"></i> 12%</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm rounded-3 h-100">
+          <div class="card-body p-4">
+            <p class="text-muted small fw-medium mb-1">Bookings (MTD)</p>
+            <div class="d-flex align-items-end gap-2">
+              <h3 class="mb-0 fw-bold">2,840</h3>
+              <small class="text-success fw-medium mb-1"><i class="bi bi-graph-up-arrow"></i> 8%</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm rounded-3 h-100">
+          <div class="card-body p-4">
+            <p class="text-muted small fw-medium mb-1">Revenue</p>
+            <div class="d-flex align-items-end gap-2">
+              <h3 class="mb-0 fw-bold">$1.2M</h3>
+              <small class="text-muted fw-medium mb-1">Steady</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm rounded-3 h-100">
+          <div class="card-body p-4">
+            <p class="text-muted small fw-medium mb-1">Avg Rating</p>
+            <div class="d-flex align-items-end gap-2">
+              <h3 class="mb-0 fw-bold">4.92</h3>
+              <small class="text-warning mb-1"><i class="bi bi-star-fill"></i></small>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- Table Container -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5" id="tourListContainer" th:fragment="tourListFragment">
+      <!-- Filter and Sort Bar -->
+      <div class="card-header bg-white border-bottom p-4 d-flex justify-content-between align-items-center">
+        <div class="d-flex gap-3">
+          <div class="dropdown">
+            <button class="btn btn-outline-secondary rounded-pill px-4 fw-medium dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-filter me-2"></i><span th:text="${selectedCategory == null ? 'Filter' : selectedCategory}">Filter</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item category-filter" href="#" data-category="">All Categories</a></li>
+              <li th:each="cat : ${categories}"><a class="dropdown-item category-filter" href="#" th:data-category="${cat.name()}" th:text="${cat}">Category</a></li>
+            </ul>
+          </div>
+          <button class="btn btn-outline-secondary rounded-pill px-4 fw-medium">Sort by: Recent <i class="bi bi-chevron-down ms-2"></i></button>
+        </div>
+        <small class="text-muted" th:text="'Showing ' + (${tours.number * tours.size + 1}) + '-' + (${tours.number * tours.size + tours.numberOfElements}) + ' of ' + ${tours.totalElements} + ' tours'"></small>
+      </div>
+
+      <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0 custom-admin-table">
+            <thead class="text-muted small text-uppercase bg-white">
+              <tr>
+                <th class="ps-4 py-3 fw-semibold border-bottom-0">Tour</th>
+                <th class="py-3 fw-semibold border-bottom-0">Location</th>
+                <th class="py-3 fw-semibold border-bottom-0">Category</th>
+                <th class="py-3 fw-semibold border-bottom-0">Price</th>
+                <th class="py-3 fw-semibold border-bottom-0">Duration</th>
+                <th class="py-3 fw-semibold border-bottom-0">Status</th>
+                <th class="text-end pe-4 py-3 fw-semibold border-bottom-0">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="border-top-0">
+              <tr th:each="tour : ${tours.content}">
+                <td class="ps-4 py-3">
+                  <div class="d-flex align-items-center gap-3">
+                    <img th:src="${tour.imageUrl}" class="rounded-3 shadow-sm" style="width: 64px; height: 64px; object-fit: cover;" th:alt="${tour.title}">
+                    <div>
+                      <h6 class="mb-1 fw-bold text-dark" th:text="${tour.title}">Title</h6>
+                      <span class="badge bg-warning bg-opacity-25 text-warning-emphasis border border-warning border-opacity-50 rounded-1 text-uppercase px-2" style="font-size: 0.65rem; letter-spacing: 0.5px;" th:if="${tour.featured}"><i class="bi bi-star-fill me-1"></i>Featured</span>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3">
+                  <span class="text-muted d-block lh-sm" th:text="${tour.location}">Location</span>
+                </td>
+                <td class="py-3">
+                  <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 fw-medium text-uppercase" th:text="${tour.category}">CAT</span>
+                </td>
+                <td class="py-3">
+                  <span class="fw-bold text-dark" th:text="'$' + ${#numbers.formatDecimal(tour.price, 1, 2)}">$0</span>
+                </td>
+                <td class="py-3">
+                  <span class="text-muted" th:text="${tour.durationDays} + ' days'">0 days</span>
+                </td>
+                <td class="py-3">
+                  <div class="d-flex align-items-center gap-2">
+                    <span th:if="${tour.active}" class="d-inline-block bg-success rounded-circle" style="width: 8px; height: 8px;"></span>
+                    <span th:unless="${tour.active}" class="d-inline-block bg-secondary rounded-circle" style="width: 8px; height: 8px;"></span>
+                    <span th:text="${tour.active ? 'Active' : 'Inactive'}" class="fw-medium" th:classappend="${tour.active ? 'text-success' : 'text-secondary'}">Status</span>
+                  </div>
+                </td>
+                <td class="text-end pe-4 py-3">
+                  <a th:href="@{/admin/tours/{id}/edit(id=${tour.id})}" class="btn btn-sm btn-light text-secondary me-1"><i class="bi bi-pencil"></i></a>
+                  <form th:action="@{/admin/tours/{id}/delete(id=${tour.id})}" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this tour?');">
+                    <button type="submit" class="btn btn-sm btn-light text-secondary"><i class="bi bi-trash"></i></button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="card-footer bg-white border-top p-4 d-flex justify-content-between align-items-center" th:if="${tours.totalPages > 1}">
+          <nav>
+            <ul class="pagination mb-0 gap-2">
+              <li class="page-item" th:classappend="${tours.first} ? 'disabled'">
+                <a class="page-link border-0 text-dark bg-light rounded-2 px-3" th:href="@{/admin/tours(page=${tours.number - 1})}"><i class="bi bi-chevron-left"></i></a>
+              </li>
+              <li class="page-item" th:each="i : ${#numbers.sequence(0, tours.totalPages - 1)}" th:classappend="${tours.number == i} ? 'active'">
+                <a class="page-link border-0 rounded-2 px-3 fw-medium" th:classappend="${tours.number == i} ? 'bg-primary text-white shadow-sm' : 'text-dark bg-light'" th:href="@{/admin/tours(page=${i})}" th:text="${i + 1}">1</a>
+              </li>
+              <li class="page-item" th:classappend="${tours.last} ? 'disabled'">
+                <a class="page-link border-0 text-dark bg-light rounded-2 px-3" th:href="@{/admin/tours(page=${tours.number + 1})}"><i class="bi bi-chevron-right"></i></a>
+              </li>
+            </ul>
+          </nav>
+          <div class="d-flex align-items-center gap-2">
+            <span class="text-muted small">Items per page:</span>
+            <span class="border rounded-2 px-3 py-1 bg-white small fw-medium">10</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Promo Cards -->
+    <div class="row g-4">
+      <div class="col-md-8">
+        <div class="card border-0 rounded-4 overflow-hidden position-relative promo-card text-white h-100" style="min-height: 250px;">
+          <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Nordic Regions" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
+          <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50" style="background: linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.2));"></div>
+          <div class="card-body position-relative z-1 d-flex flex-column justify-content-end p-5">
+            <span class="badge bg-primary rounded-1 px-2 py-1 mb-3 text-uppercase align-self-start" style="font-size: 0.7rem; letter-spacing: 0.5px;">Announcement</span>
+            <h3 class="fw-bold mb-2">Expanding to Nordic Regions</h3>
+            <p class="mb-0 text-white-50" style="max-width: 500px;">New partnership with local guides in Norway and Iceland is now live. Update your curators to start building Northern Lights packages.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-0 rounded-4 h-100 text-white p-5" style="background-color: #5a4fcf;">
+          <h5 class="fw-bold mb-4">Curator Insights</h5>
+          <p class="mb-5 text-white-50" style="line-height: 1.6;">Your top performing tour is 'Tokyo Highlights' with 98% occupancy this month.</p>
+          <a href="#" class="btn btn-outline-light rounded-pill px-4 mt-auto align-self-start">View Analytics <i class="bi bi-arrow-right ms-2"></i></a>
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <div th:replace="~{fragments/navbar :: scripts}"></div>
+
+  <!-- AJAX List Script -->
+  <script>
+    function loadTours(url) {
+        fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('tourListContainer').outerHTML = html;
+            bindAjaxLinks();
+        })
+        .catch(error => console.error('Error fetching tours:', error));
+    }
+
+    function bindAjaxLinks() {
+        const container = document.getElementById('tourListContainer');
+        if (!container) return;
+        
+        container.querySelectorAll('.pagination a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const keyword = document.getElementById('adminSearchInput') ? document.getElementById('adminSearchInput').value : '';
+                const category = document.getElementById('adminCategoryInput') ? document.getElementById('adminCategoryInput').value : '';
+                const url = new URL(this.href);
+                if (keyword) {
+                    url.searchParams.set('keyword', keyword);
+                } else {
+                    url.searchParams.delete('keyword');
+                }
+                if (category) {
+                    url.searchParams.set('category', category);
+                } else {
+                    url.searchParams.delete('category');
+                }
+                loadTours(url.toString());
+            });
+        });
+
+        container.querySelectorAll('.category-filter').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const selectedCat = this.getAttribute('data-category');
+                if (document.getElementById('adminCategoryInput')) {
+                    document.getElementById('adminCategoryInput').value = selectedCat;
+                }
+                
+                const keyword = document.getElementById('adminSearchInput') ? document.getElementById('adminSearchInput').value : '';
+                let url = new URL(window.location.origin + '/admin/tours');
+                if (keyword) url.searchParams.set('keyword', keyword);
+                if (selectedCat) url.searchParams.set('category', selectedCat);
+                
+                loadTours(url.toString());
+            });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        bindAjaxLinks();
+        
+        let typingTimer;
+        const searchInput = document.getElementById('adminSearchInput');
+        
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(function() {
+                    const keyword = searchInput.value;
+                    const category = document.getElementById('adminCategoryInput') ? document.getElementById('adminCategoryInput').value : '';
+                    let url = new URL(window.location.origin + '/admin/tours');
+                    if (keyword) url.searchParams.set('keyword', keyword);
+                    if (category) url.searchParams.set('category', category);
+                    
+                    loadTours(url.toString());
+                }, 300); // 300ms debounce
+            });
+        }
+    });
+  </script>
 </body>
 
 </html>

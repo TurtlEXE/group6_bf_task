@@ -14,17 +14,31 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
 
     Page<Tour> findByActiveTrue(Pageable pageable);
 
-    Page<Tour> findByActiveTrueAndTitleContainingIgnoreCaseOrActiveTrueAndLocationContainingIgnoreCase(String title,
-            String location, Pageable pageable);
+    @org.springframework.data.jpa.repository.Query("SELECT t FROM Tour t WHERE t.active = true " +
+           "AND (:category IS NULL OR t.category = :category) " +
+           "AND (:keyword IS NULL OR :keyword = '' OR LOWER(t.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(t.location) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+           "AND (:minPrice IS NULL OR t.price >= :minPrice) " +
+           "AND (:maxPrice IS NULL OR t.price <= :maxPrice)")
+    Page<Tour> searchToursPublic(@org.springframework.data.repository.query.Param("keyword") String keyword, 
+                                 @org.springframework.data.repository.query.Param("category") TourCategory category, 
+                                 @org.springframework.data.repository.query.Param("minPrice") Double minPrice, 
+                                 @org.springframework.data.repository.query.Param("maxPrice") Double maxPrice, 
+                                 Pageable pageable);
 
-    Page<Tour> findByActiveTrueAndCategoryAndTitleContainingIgnoreCase(TourCategory category, String title,
-            Pageable pageable);
-
+    @org.springframework.data.jpa.repository.Query("SELECT t FROM Tour t WHERE 1=1 " +
+           "AND (:category IS NULL OR t.category = :category) " +
+           "AND (:keyword IS NULL OR :keyword = '' OR LOWER(t.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(t.location) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+           "AND (:minPrice IS NULL OR t.price >= :minPrice) " +
+           "AND (:maxPrice IS NULL OR t.price <= :maxPrice)")
+    Page<Tour> searchToursAdmin(@org.springframework.data.repository.query.Param("keyword") String keyword, 
+                                @org.springframework.data.repository.query.Param("category") TourCategory category, 
+                                @org.springframework.data.repository.query.Param("minPrice") Double minPrice, 
+                                @org.springframework.data.repository.query.Param("maxPrice") Double maxPrice, 
+                                Pageable pageable);
+                                
     List<Tour> findTop4ByActiveTrueAndFeaturedTrueOrderByCreatedAtDesc();
 
-    Page<Tour> findByActiveTrueAndCategory(TourCategory category, Pageable pageable);
-
     List<Tour> findTop3ByActiveTrueAndCategoryAndIdNot(TourCategory category, Long id);
-
+    
     long countByActiveTrue();
 }

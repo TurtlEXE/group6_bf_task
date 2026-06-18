@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +35,29 @@ public class AdminTourController {
     }
 
     @GetMapping("/tours")
-    public String listTours(@RequestParam(defaultValue = "0") int page, Model model) {
-        Page<Tour> tours = tourService.getAllToursAdmin(PageRequest.of(page, 10));
+    public String listTours(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "0") int page, 
+            Model model, 
+            HttpServletRequest request) {
+        
+        com.wanderlust.bf_groupproject_1.enums.TourCategory cat = null;
+        if (category != null && !category.isEmpty()) {
+            try {
+                cat = com.wanderlust.bf_groupproject_1.enums.TourCategory.valueOf(category);
+            } catch (Exception e) {}
+        }
+        
+        Page<Tour> tours = tourService.searchAllToursAdmin(keyword, cat, null, null, PageRequest.of(page, 10));
         model.addAttribute("tours", tours);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("selectedCategory", category);
+        model.addAttribute("categories", com.wanderlust.bf_groupproject_1.enums.TourCategory.values());
+        
+        if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+            return "admin/tours/list :: tourListFragment";
+        }
         return "admin/tours/list";
     }
 

@@ -1,6 +1,6 @@
--- Insert Admin User (Password: Admin@123)
+-- Insert Admin User (Password: 123456)
 INSERT INTO users (username, email, password, first_name, last_name, role, enabled, email_verified, created_at, updated_at)
-SELECT 'admin', 'admin@wanderlust.com', '$2a$10$wEInA1y7Z.1u1P/oQzB7M.97iBq.dJg/zH87Z/M5/1uV8g1H6k02y', 'System', 'Admin', 'ROLE_ADMIN', true, true, NOW(), NOW()
+SELECT 'admin', 'admin@wanderlust.com', '$2a$10$jf.SaucmBDUJkgkN1q1Ph.qO5uOkFsTgWOcN5DnFtEZoPNZ8udm/q', 'System', 'Admin', 'ROLE_ADMIN', true, true, NOW(), NOW()
 WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'admin');
 
 -- Insert Sample Tours
